@@ -66,6 +66,7 @@ class PalmSimulator:
         # print("triangle_list: ", self.triangle_list)
         self.triangle_list = np.array(self.triangle_list)
         self.nCable = len(self.pp_idx)
+        self.original_verts = self.vertices.copy()
         for i in range(self.num_vertices):
             self.vertices[i] = np.dot(self.Rz, self.vertices[i])
         self.cur_vertices = self.vertices.copy()
@@ -115,6 +116,12 @@ class PalmSimulator:
         self.Q0 = np.zeros((3*self.num_vertices, 1))
         for i in range(self.num_vertices):
             self.Q0[3*i:3*i+3, 0] = self.vertices[i]
+        print("initial pp location:")
+        for i in range(self.nCable):
+            print(f"Pullpoint {i+1}: {self.vertices[self.pp_idx[i]]}")
+        print("pulley location:")
+        for i in range(self.nCable):
+            print(f"Pulley {i+1}: {self.pulley_location[i]}")
         print("Initial cable length: ", self.initial_cable_length)
         
         print("Number of tets: ", self.num_tetrahedra)
@@ -299,8 +306,7 @@ class PalmSimulator:
         return is_contact_list, sdf_value_list, unit_vec_list
         
         
-        
-
+    
 # cg part 
     def assemble_cg_matrices(self):
         self.matAcg_original = np.zeros((12*self.num_tetrahedra + 3*self.nCable, 3*self.num_vertices))
@@ -523,7 +529,7 @@ class PalmSimulator:
             lcp_Mmat = h * H_free @ self.W_mat @ A_inv @ H_free.T
             M_is_PD = np.all(np.linalg.eigvals(lcp_Mmat) > 0)
             lcp_q = phi_Qfree.reshape((self.nCable,))
-            cable_tension = solve_qp(lcp_Mmat, phi_Qfree, -lcp_Mmat, phi_Qfree, lb = np.zeros((self.nCable,)), solver = 'cvxopt')
+            cable_tension = projected_gauss_seidel_lcp(lcp_Mmat, phi_Qfree)
             cable_tension.reshape((self.nCable, 1))
             # print("cur time: ", t_a, "cable_tension: ", cable_tension, "lcp_q: ", lcp_q.flatten(), "M_is_PD: ", M_is_PD)
             cable_tension.reshape((self.nCable, 1))
@@ -539,7 +545,7 @@ class PalmSimulator:
         
         for i in range(self.num_vertices):
             vert_length[i] = Q_a[3*i:3*i+3].reshape((3,))
-        return vert_length
+        return vert_length, cable_tension.flatten()
 
     def FKD_length_forceinput(self, target_cable_length, starting_Q, starting_Qd):
         Q_a = starting_Q.copy()
@@ -1717,17 +1723,16 @@ class PalmSimulator:
 if __name__ == "__main__":
     pickleFilename = 'models/palm_size3.pickle'
     palm = PalmSimulator(pickleFilename)
-    palm.generate_dataset("dataset.pkl", n_samples=1000)
+    # palm.generate_dataset("dataset.pkl", n_samples=1000)
+    # print("pulley_location: ", palm.pulley_location)
+    # palm.draw_mesh_with_initial(palm.original_verts)
+    # exit(0)
 
-    # icl = palm.initial_cable_length.copy()
-    # print("initial cable length: ", icl)
-    # # palm.draw_arm_contour()
-    # tar_cable_length = [icl[0], icl[1], icl[2], icl[3]]
-    # verts = palm.FKD_static(tar_cable_length, palm.Q0, np.zeros((3*palm.num_vertices, 1)))
-    # returned_cl = palm.get_cable_length(palm.vertices_2_Q(verts),palm.pulley_location)
-    # print("returned cable length: ", returned_cl)
-    # diff_cl = [palm.initial_cable_length[i]-returned_cl[i] for i in range(len(returned_cl))]
-    # print("difference in cable length: ", diff_cl)
-    # palm.draw_mesh_with_initial(verts)
+    icl = palm.initial_cable_length.copy()
+    print("initial cable length: ", icl)
+    # palm.draw_arm_contour()
+    tar_cable_length = [0.09140093898987767, 0.10785759469231798, 0.1122490790431223, 0.10040954588727102]
+    verts, cable_tension = palm.FKD_static(tar_cable_length, palm.Q0, np.zeros((3*palm.num_vertices, 1)))
+    palm.draw_mesh_with_initial(verts)
 
     

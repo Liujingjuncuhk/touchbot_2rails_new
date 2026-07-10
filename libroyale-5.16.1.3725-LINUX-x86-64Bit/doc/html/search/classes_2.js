@@ -1,0 +1,24 @@
+var searchData=
+[
+  ['icameradevice_449',['ICameraDevice',['../a00977.html',1,'royale']]],
+  ['idepthdatalistener_450',['IDepthDataListener',['../a00981.html',1,'royale']]],
+  ['idepthimagelistener_451',['IDepthImageListener',['../a00985.html',1,'royale']]],
+  ['idepthirimagelistener_452',['IDepthIRImageListener',['../a00989.html',1,'royale']]],
+  ['ievent_453',['IEvent',['../a00993.html',1,'royale']]],
+  ['ieventlistener_454',['IEventListener',['../a00997.html',1,'royale']]],
+  ['iexposuregrouplistener_455',['IExposureGroupListener',['../a01001.html',1,'royale']]],
+  ['iexposurelistener_456',['IExposureListener',['../a01005.html',1,'royale']]],
+  ['iextendeddata_457',['IExtendedData',['../a01009.html',1,'royale']]],
+  ['iextendeddatalistener_458',['IExtendedDataListener',['../a01013.html',1,'royale']]],
+  ['iirimagelistener_459',['IIRImageListener',['../a01017.html',1,'royale']]],
+  ['intermediatedata_460',['IntermediateData',['../a01025.html',1,'royale']]],
+  ['intermediatepoint_461',['IntermediatePoint',['../a01021.html',1,'royale']]],
+  ['invalidtype_462',['InvalidType',['../a01073.html',1,'royale::Variant']]],
+  ['iplaybackstoplistener_463',['IPlaybackStopListener',['../a01029.html',1,'royale']]],
+  ['ipointcloudlistener_464',['IPointCloudListener',['../a01033.html',1,'royale']]],
+  ['irawdatalistener_465',['IRawDataListener',['../a01037.html',1,'royale']]],
+  ['irecord_466',['IRecord',['../a01041.html',1,'royale']]],
+  ['irecordstoplistener_467',['IRecordStopListener',['../a01045.html',1,'royale']]],
+  ['ireplay_468',['IReplay',['../a01049.html',1,'royale']]],
+  ['irimage_469',['IRImage',['../a01053.html',1,'royale']]]
+];

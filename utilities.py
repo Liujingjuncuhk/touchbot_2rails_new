@@ -715,6 +715,85 @@ def run_icp(pointcloud_a, pointcloud_b, max_iterations=100, tolerance=1e-6):
     # Return transformation matrix and aligned points
     return T, src
 
+def projected_gauss_seidel_lcp(
+    M: np.ndarray,
+    q: np.ndarray,
+    max_iter: int = 1000,
+    tol: float = 1e-8,
+    omega: float = 1.3,        # over-relaxation (1.0 = pure GS, 1.3–1.9 common in robotics)
+    warm_start: np.ndarray | None = None,
+    verbose: bool = False
+) -> np.ndarray:
+    """
+    Solve LCP:  w = M z + q >= 0,  z >= 0,  z^T w = 0
+    using Projected Gauss-Seidel (successive over-relaxation).
+    
+    Returns the least 2-norm solution (minimum impulse) — the physically correct one in robotics.
+    
+    Parameters
+    ----------
+    M : (n,n) np.ndarray
+        Usually symmetric positive semi-definite in robotics (e.g., Delassus matrix)
+    q : (n,) np.ndarray
+    max_iter, tol, omega : convergence controls
+    warm_start : optional initial guess (greatly speeds up sequential solves)
+    
+    Returns
+    -------
+    z : (n,) solution vector
+    """
+    n = len(q)
+    M = np.asarray(M, dtype=np.float64)
+    q = np.asarray(q, dtype=np.float64)
+    
+    # Diagonal dominance check (optional warning)
+    diag = np.diag(M)
+    if np.any(diag <= 0):
+        print("Warning: M has non-positive diagonal entries → may diverge!")
+    
+    z = np.zeros(n, dtype=np.float64) if warm_start is None else warm_start.copy()
+    w = M @ z + q
+    
+    for iteration in range(max_iter):
+        z_old = z.copy()
+        
+        for i in range(n):
+            if M[i,i] == 0:
+                z[i] = 0  # avoid division by zero
+                continue
+                
+            # Predicted w_i if z_i were free
+            w_pred = q[i] + M[i,:i] @ z[:i] + M[i,i+1:] @ z[i+1:]
+            
+            # Gauss-Seidel update + projection onto z_i >= 0 and w_i >= 0
+            z_new = max(0.0, z[i] - omega * (M[i,i] * z[i] + w_pred) / M[i,i])
+            
+            # Apply relaxation
+            z[i] = z_new
+            
+            # Optional: update w incrementally (saves one full Mv per sweep)
+            # w[i] = M[i,i] * z[i] + w_pred
+        
+        # Full residual (for convergence check)
+        w = M @ z + q
+        residual = np.maximum(z, w)  # violation = max(z_i, w_i) when one should be zero
+        res_norm = np.linalg.norm(residual, np.inf)
+        
+        if res_norm < tol:
+            if verbose:
+                print(f"Converged in {iteration+1} iterations (res = {res_norm:.2e})")
+            return z
+        
+        if np.linalg.norm(z - z_old) < tol:
+            if verbose:
+                print(f"Stalled at iteration {iteration+1}, res = {res_norm:.2e}")
+            break
+            
+    if verbose:
+        print(f"Max iterations reached. Final residual: {res_norm:.2e}")
+    
+    return z
+
 def sample_rows(arr, n):
     """
     Randomly sample n rows from a NumPy array.

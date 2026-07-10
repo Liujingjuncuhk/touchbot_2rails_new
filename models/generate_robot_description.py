@@ -79,7 +79,7 @@ if __name__ == "__main__":
     # pullpoints = np.array([[61,-96, 0],[61, 96,  0], [-61, -96,  0], [ -61,96, 0], [61, -26, 3],[61,26, 3],[-61,-26, 3],[-61,26, 3]])*1e-3
     # pulley_locations = np.array([[444,724,46],[444,36,46],[116,724,46],[116,36,46],[464,724,561],[464,36,561],[96, 724,561],[96, 36,561]])*1e-3
     pplocation_size3 = np.array([[57.61, 8.96, 6], [65.12, 46.49, 8.00], [65.12, 46.49, 57], [57.61, 8.96, 60]])*1e-3
-    pplocation_size2 = np.array([[57.76, 9.89, 4.5], [52.66, 47.39, 8], [52.66, 47.39, 57], [57.61,  9.89, 60.5]])*1e-3
+    # pplocation_size2 = np.array([[57.76, 9.89, 4.5], [52.66, 47.39, 8], [52.66, 47.39, 57], [57.61,  9.89, 60.5]])*1e-3
     
     generate_robot_description(pickleFilename, robot_model, pplocation_size3, pulley_location)
     print(f"Robot description saved to {pickleFilename}")

@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -shared  -o _roypy.so CMakeFiles/roypy.dir/bin/roypyPYTHON_wrap.cxx.o  -Wl,-rpath,/home/ubuntu/Desktop/libroyale-5.16.1.3725-LINUX-x86-64Bit/bin /home/ubuntu/Desktop/libroyale-5.16.1.3725-LINUX-x86-64Bit/bin/libroyale.so.5.16.1 /usr/lib/x86_64-linux-gnu/libpython3.10.so 

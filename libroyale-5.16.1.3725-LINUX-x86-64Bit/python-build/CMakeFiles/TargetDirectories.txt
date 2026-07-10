@@ -1,0 +1,4 @@
+/home/ubuntu/Desktop/libroyale-5.16.1.3725-LINUX-x86-64Bit/python-build/CMakeFiles/roypy.dir
+/home/ubuntu/Desktop/libroyale-5.16.1.3725-LINUX-x86-64Bit/python-build/CMakeFiles/roypy_swig_compilation.dir
+/home/ubuntu/Desktop/libroyale-5.16.1.3725-LINUX-x86-64Bit/python-build/CMakeFiles/edit_cache.dir
+/home/ubuntu/Desktop/libroyale-5.16.1.3725-LINUX-x86-64Bit/python-build/CMakeFiles/rebuild_cache.dir

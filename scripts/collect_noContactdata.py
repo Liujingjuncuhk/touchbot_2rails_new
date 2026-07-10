@@ -28,7 +28,7 @@ if __name__ == "__main__":
         "forces": force_list
     }
 
-    with open("data_noContact.pkl", "wb") as f:
+    with open("size3_noContact_lengthForce_test.pkl", "wb") as f:
         pickle.dump(data_noContact, f)
 
     touchbot.close_all()
